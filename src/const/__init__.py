@@ -5,7 +5,7 @@ from enum import Enum
 class Step(str, Enum):
     Resume_Parsing = "Resume_Parsing"
     Scraping = "Scraping"
-    Criteria_Filtering = "Criteria_Filtering"
+    Filtering = "Filtering"
     Cover_Letter_Generation = "Cover_Letter_Generation"
     
 
