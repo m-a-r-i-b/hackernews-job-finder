@@ -11,11 +11,11 @@ from const import Step
 class FilterAgent(Agent):
     def __init__(
         self,
-        brain_type: AgentBrainModel = AgentBrainModel.GPT_3_5_Turbo_0125,
+        brain_model: AgentBrainModel = AgentBrainModel.GPT_3_5_Turbo_0125,
     ):
         prompt = get_chat_prompt()
         agent_output_class = FilterAgentOutput
-        super().__init__(brain_type, prompt, agent_output_class, blackboard)
+        super().__init__(brain_model, prompt, agent_output_class)
 
     @observe()
     def run(
