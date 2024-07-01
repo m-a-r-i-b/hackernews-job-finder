@@ -6,7 +6,7 @@ from const import Step
 from agents.dumb.commit.output import CommitOutput, CommitOutputData
 
 
-class ScrapingAgent(Agent):
+class ScraperAgent(Agent):
     def __init__(
         self,
         blackboard: BlackBoard,

@@ -9,13 +9,13 @@ import copy
 
 
 class BlackBoard:
-    def __init__(self, db_connection):
+    def __init__(self, project_id):
         self._data: BlackBoardData
-        self.persistence_service = Persistence(db_connection)
-
-    def _initialize_blackboard(self, project_id: str):
+        self.persistence_service = Persistence()
         self.project_id = project_id
         self._read_or_create_project()
+
+        
 
     def _read_or_create_project(self):
         try:

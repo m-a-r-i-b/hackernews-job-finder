@@ -1,11 +1,7 @@
 import json
 from typing import Union
-
-from aiohttp import ClientError
 from memory.blackboard.BlackboardData import BlackBoardData
 from dataclasses import asdict
-import os
-
 from enum import Enum
 
 
@@ -18,13 +14,10 @@ class OperationMode(str, Enum):
 
 
 class Persistence:
-    def __init__(self, db_connection):
+    def __init__(self):
         self.operation_mode = OperationMode.File
 
-        if self.operation_mode == OperationMode.DB:
-            self.table = db_connection.Table(os.getenv("BLACKBOARD_TABLE"))
-
-        self.filename = "data.json"
+        self.filename = "project_state_data.json"
 
     def load_project(self, project_id: str) -> Union[BlackBoardData, None]:
         if self.operation_mode == OperationMode.File:
@@ -38,16 +31,6 @@ class Persistence:
             except (FileNotFoundError, json.JSONDecodeError):
                 return None
 
-        elif self.operation_mode == OperationMode.DB:
-            try:
-                response = self.table.get_item(Key={"project_id": project_id})
-                if "Item" in response:
-                    return response["Item"]
-                else:
-                    return None
-            except ClientError as e:
-                print(e.response["Error"]["Message"])
-                return None
 
     def create_or_update_project(
         self, project_id: str, project_data: BlackBoardData
@@ -65,14 +48,3 @@ class Persistence:
                 all_data[project_id] = project_data_dict
                 json.dump(all_data, file)
                 return all_data[project_id]
-
-        elif self.operation_mode == OperationMode.DB:
-            try:
-                project_data_dict = asdict(project_data)
-                self.table.put_item(
-                    Item={"project_id": project_id, **project_data_dict}
-                )
-                return project_data_dict
-            except ClientError as e:
-                print(e.response["Error"]["Message"])
-                return None
