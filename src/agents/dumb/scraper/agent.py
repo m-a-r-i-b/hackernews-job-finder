@@ -1,21 +1,14 @@
 
 import random
 from agents.base import Agent
-from agents.base.AgentOutput import AgentObservation, AgentOutput, AgentOutputData
-from const import Step
-from agents.dumb.commit.output import CommitOutput, CommitOutputData
+from agents.base.AgentOutput import AgentOutput
 
 
 class ScraperAgent(Agent):
     def __init__(
         self,
-        blackboard: BlackBoard,
         *args,
     ):
-        self.repo_url = blackboard.get_information(
-            Step.Scraping
-        )
-        
         super().__init__()
 
     def run(

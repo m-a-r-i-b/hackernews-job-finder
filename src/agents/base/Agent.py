@@ -1,4 +1,3 @@
-from agents.base.Agent import Agent
 from const import AgentBrainModel
 from const import GPT_MODELS, ANTHROPIC_MODELS
 from langchain_openai import ChatOpenAI

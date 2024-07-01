@@ -10,12 +10,8 @@ import os
 from typing import List
 
 from dotenv import load_dotenv
-from agents.base.AgentOutput import AgentOutput
-from agents.dumb.scraper.agent import ScraperAgent
-from agents.smart.filter.agent import FilterAgent
 from const import Step
 from memory.blackboard.Blackboard import BlackBoard
-from agents.base.Agent import Agent
 from memory.blackboard.BlackboardData import State
 from step_functions.do_filtering import do_filtering
 from step_functions.do_scraping import do_scraping
@@ -62,7 +58,7 @@ class ProjectManager:
         return next_step
 
 
-    def _get_func_for_step(self, step) -> Agent:
+    def _get_func_for_step(self, step) -> any:
         return self.STEP_TO_STEP_FUNC_MAPPING[step]
 
 
