@@ -1,4 +1,4 @@
-from agents.base import Agent
+from agents.base.Agent import Agent
 from agents.smart.filter.output import (
     FilterAgentOutput,
 )

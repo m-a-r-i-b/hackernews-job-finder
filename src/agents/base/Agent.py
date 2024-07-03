@@ -10,7 +10,7 @@ from const import AGENT_INITIAL_RETRY_DELAY, AGENT_MAX_RETRIES
 from langfuse.decorators import langfuse_context
 
 
-class BaseAgent():
+class Agent():
     def __init__(
         self,
         brain_model: AgentBrainModel,

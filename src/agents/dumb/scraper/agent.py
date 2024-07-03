@@ -1,6 +1,6 @@
 
 import random
-from agents.base import Agent
+from agents.base.Agent import Agent
 from agents.base.AgentOutput import AgentOutput
 
 
