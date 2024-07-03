@@ -21,7 +21,7 @@ class ScraperAgent(Agent):
             repo_url = self._push_updated_contract(repo_url, user_id)
             
         
-        return CommitOutput(observation=AgentObservation.STEP_COMPLETED, data=CommitOutputData(message="Project Committed Successfully!", repo_url=repo_url))
+        # return CommitOutput(observation=AgentObservation.STEP_COMPLETED, data=CommitOutputData(message="Project Committed Successfully!", repo_url=repo_url))
 
 
     def _create_repo_and_push_contract(self, user_id: str):

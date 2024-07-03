@@ -5,7 +5,6 @@
 
 
 import argparse
-import json
 import os
 from typing import List
 
@@ -13,7 +12,9 @@ from dotenv import load_dotenv
 from const import Step
 from memory.blackboard.Blackboard import BlackBoard
 from memory.blackboard.BlackboardData import State
+from step_functions.do_cover_letter_generation import do_cover_letter_generation
 from step_functions.do_filtering import do_filtering
+from step_functions.do_resume_parsing import do_resume_parsing
 from step_functions.do_scraping import do_scraping
 
 
@@ -24,11 +25,13 @@ class ProjectManager:
         self.STEP_TO_STEP_FUNC_MAPPING = {
             Step.Scraping: do_scraping,
             Step.Filtering: do_filtering,
+            Step.Resume_Parsing: do_resume_parsing,
+            Step.Cover_Letter_Generation: do_cover_letter_generation,
         }
 
  
     def _get_current_step(self) -> Step:
-        return self.blackboard.get_data().state.step
+        return self.blackboard.get_data().state.curr_step
 
 
     def _get_current_state(self) -> State:
@@ -54,8 +57,8 @@ class ProjectManager:
         next_step = execution_plan[next_step_index]
         print("next_step = ",next_step)
 
-        self.blackboard.update_state(State(step=next_step, curr_step_index=next_step_index, interactable=False))
-        return next_step
+        self.blackboard.update_state(State(curr_step=next_step, curr_step_index=next_step_index))
+        return next_step, next_step_index
 
 
     def _get_func_for_step(self, step) -> any:
@@ -63,15 +66,15 @@ class ProjectManager:
 
 
     def start_execution_loop(self):
-        curr_state = self._get_current_state()
-        curr_step = curr_state.step
+        curr_step = self._get_current_step()
+        curr_step_index = self._get_current_step_index()
 
         while True:
             self._get_func_for_step(curr_step)()
-            if curr_state.curr_step_index == len(self._get_execution_plan()) - 1:
+            if curr_step_index == len(self._get_execution_plan()) - 1:
                 print("Project completed!")
                 break
-            curr_step = self._move_to_next_step()
+            curr_step, curr_step_index = self._move_to_next_step()
             
 
 

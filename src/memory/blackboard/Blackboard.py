@@ -59,7 +59,7 @@ class BlackBoard:
     def update_information(self, step_information: Dict[str, Any], step: Step = None):
         data = self.get_data()
         if step is None:
-            step = data.state.step
+            step = data.state.curr_step
       
         data.information[step] = step_information
         self._persist_data_to_database(data)
