@@ -7,7 +7,6 @@ from agents.base.AgentOutput import AgentOutput
 class ScraperAgent(Agent):
     def __init__(
         self,
-        *args,
     ):
         super().__init__()
 

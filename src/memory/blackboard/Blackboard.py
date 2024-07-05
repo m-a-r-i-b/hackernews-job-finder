@@ -41,6 +41,9 @@ class BlackBoard:
 
     def get_data(self) -> BlackBoardData:
         return copy.deepcopy(self._data)
+    
+    def get_project_id(self):
+        return self.project_id
 
     def get_information(self, step: Step):
         data = self.get_data()
