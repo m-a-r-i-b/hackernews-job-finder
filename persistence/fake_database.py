@@ -19,8 +19,33 @@ class Database:
         return self._table_data.get(project_id)
     
 
+    def get_comment(self, project_id: str, comment_id: str):
+        return self._table_data.get(project_id)[comment_id]
+    
+
     def update_project(self, project_id: str, data):
-        self._table_data[project_id] = data
+        if project_id in self._table_data:
+            # Update existing dictionary with new data
+            self._table_data[project_id].update(data)
+        else:
+            # If project_id does not exist, just set it
+            self._table_data[project_id] = data
+
+        self._table_data_updated[project_id] = True
+        # TODO : Move this to a separate thread
+        self._persist_data()
+
+
+    def update_comment(self, project_id: str, comment_id: str, data):
+        if project_id in self._table_data:
+            if comment_id in self._table_data[project_id]:
+                self._table_data[project_id][comment_id].update(data)
+            else:
+                self._table_data[project_id][comment_id] = data
+        else:
+            print('[ERROR] | Project id {project_id} not found...')
+            return
+
         self._table_data_updated[project_id] = True
         # TODO : Move this to a separate thread
         self._persist_data()
