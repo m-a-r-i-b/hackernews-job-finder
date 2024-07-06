@@ -17,7 +17,7 @@ async def submit_item(thread: ThreadDetails, background_tasks: BackgroundTasks):
         return {"status": "error", "msg": "Criteria not set."}
     
     comments_dict = scrap_comments(thread.url)
-    db.create_thread(thread.url, comments_dict)
+    db.create_thread(thread.title, thread.url, comments_dict)
     background_tasks.add_task(process_comments_in_background, comments_dict, thread.url, db)
 
     return {"title": thread.title, "url": thread.url}
@@ -41,3 +41,6 @@ async def submit_item(criteria: Criteria):
 @app.get("/get-criteria/")
 async def get_criteria():
     return db.get_criteria()
+
+
+# uvicorn server:app --reload
