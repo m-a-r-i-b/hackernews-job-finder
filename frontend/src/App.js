@@ -22,9 +22,6 @@ const App = () => {
           <Menu.Item key="3">
             <Link to="/criteria">Criteria</Link>
           </Menu.Item>
-          <Menu.Item key="4">
-            <Link to="/thread-details">Thread Details</Link>
-          </Menu.Item>
         </Menu>
       </Header>
       <Content style={{ padding: '20px' }}>
@@ -32,7 +29,7 @@ const App = () => {
           <Route path="/" element={<Threads />} />
           <Route path="/experience" element={<Experience />} />
           <Route path="/criteria" element={<Criteria />} />
-          <Route path="/thread-details/:title" element={<ThreadDetails />} />
+          <Route path="/thread-details/:url" element={<ThreadDetails />} />
         </Routes>
       </Content>
     </Layout>

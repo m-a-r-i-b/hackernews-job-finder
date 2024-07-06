@@ -36,8 +36,11 @@ class Database:
         self._table_data['threads'][url] = {'title': title , 'comments': comments_dict}
         self._table_data_updated = True
 
-    def get_thread(self, url: str):
-        return self._table_data.get(url)
+    def get_all_threads(self):
+        return self._table_data.get('threads', {})
+
+    def get_thread_by_url(self, url: str):
+        return self._table_data.get('threads')[url]
     
 
     def update_threads_comment(self, url: str, comment_id: str, data):

@@ -1,48 +1,89 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Table, Modal } from 'antd';
 import { useParams } from 'react-router-dom';
+import axios from 'axios';
+
 
 const ThreadDetails = () => {
-  const { title } = useParams();
+  const { url } = useParams();
   const [visible, setVisible] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
+  const [dataSource, setDataSource] = useState([]);
+  const [ws, setWs] = useState(null);
 
-  const dataSource = [
-    {
-      key: '1',
-      name: 'John Brown',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-    },
-    {
-      key: '2',
-      name: 'Jim Green',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-    },
-    {
-      key: '3',
-      name: 'Joe Black',
-      age: 32,
-      address: 'Sidney No. 1 Lake Park',
-    },
-  ];
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const decodedUrl = atob(url);
+        console.log("url = ", decodedUrl);
+        const response = await axios.get(`http://127.0.0.1:8000/get-thread-by-url/?url=${decodedUrl}`);
+        const commentsDict = response.data.comments;
+        const commentsList = Object.entries(commentsDict).map(([key, value]) => ({ key, ...value }));
+        setDataSource(commentsList);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, [url]);
+
+  useEffect(() => {
+    console.log('Connecting to WebSocket');
+    const socket = new WebSocket('ws://127.0.0.1:8000/socket-endpoint');
+    console.log('Connected to WebSocket',socket);
+    setWs(socket);
+
+    socket.addEventListener("message", (event) => {
+      console.log("KK socket event = ", event)
+      console.log("KK socket event data = ", event.data)
+    });
+
+    socket.onmessage = (event) => {
+      console.log("socket event = ", event)
+      console.log("socket event data = ", event.data)
+      const updatedComment = JSON.parse(event.data);
+      setDataSource((prevDataSource) =>
+        prevDataSource.map((comment) =>
+          comment.key === updatedComment.key ? updatedComment : comment
+        )
+      );
+    };
+
+    // socket.onclose = () => {
+    //   console.log('WebSocket connection closed');
+    // };
+
+    // return () => {
+    //   console.log('Closing the WebSocket connection');
+    //   socket.close();
+    // };
+  }, [url]);
 
   const columns = [
     {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
+      title: 'Id',
+      dataIndex: 'key',
+      width: 100,
+      key: 'key',
     },
     {
-      title: 'Age',
-      dataIndex: 'age',
-      key: 'age',
+      title: 'Comment',
+      dataIndex: 'text',
+      key: 'text',
+      width: 300,
+      ellipsis: true,
     },
     {
-      title: 'Address',
-      dataIndex: 'address',
-      key: 'address',
+      title: 'filter',
+      dataIndex: 'filter',
+      key: 'filter',
+    },
+    {
+      title: 'categorize',
+      dataIndex: 'categorize',
+      key: 'categorize',
     },
   ];
 
@@ -58,7 +99,6 @@ const ThreadDetails = () => {
 
   return (
     <div style={{ padding: '20px' }}>
-      <h1>YOOO</h1>
       <Table
         dataSource={dataSource}
         columns={columns}
@@ -74,13 +114,13 @@ const ThreadDetails = () => {
       >
         {selectedRow && (
           <div>
-            <p>Name: {selectedRow.name}</p>
-            <p>Age: {selectedRow.age}</p>
-            <p>Address: {selectedRow.address}</p>
+            <p>Key: {selectedRow.key}</p>
+            <p>Text: {selectedRow.text}</p>
+            <p>Filter: {selectedRow.filter}</p>
+            <p>Categorize: {selectedRow.categorize}</p>
           </div>
         )}
       </Modal>
-      <h1>BYEE</h1>
     </div>
   );
 };
