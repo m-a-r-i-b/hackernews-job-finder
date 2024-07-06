@@ -1,5 +1,5 @@
 import time
 
-def categorize(project_id, comment_id, db):
+def categorize(thread_url, comment_id, db):
     time.sleep(0.2)
-    db.update_comment(project_id, comment_id, {'categorize': 'Donee'})
+    db.update_threads_comment(thread_url, comment_id, {'categorize': 'Donee'})

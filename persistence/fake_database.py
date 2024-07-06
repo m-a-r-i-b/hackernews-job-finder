@@ -1,72 +1,77 @@
 from logging import exception
+import time
+from models import Criteria
 from persistence.database_service import DatabaseService
+import threading
 
 
 class Database:
     def __init__(self):
-        self._table_data = {}
-        self._table_data_updated = {}
         self.database_service = DatabaseService()
+        self._table_data = self.database_service.load_table_data()
+        self._table_data_updated = {}
+        self._persist_thread = threading.Thread(target=self._background_persist_data)
+        self._persist_thread.start()
 
 
-    def create_project(self, project_id: str, data):
-        new_project_data =  self._read_or_create_project(project_id, data)
-        self._table_data[project_id] = new_project_data
-        return new_project_data
+    def set_criteria(self, criteria: Criteria):
+        self._table_data['criteria'] = criteria
+        self._table_data_updated['criteria'] = True
+
+    def get_criteria(self):
+        return self._table_data.get('criteria')
 
 
-    def get_project(self, project_id: str):
-        return self._table_data.get(project_id)
+    def set_experience(self, exp: str):
+        self._table_data['experience'] = exp
+        self._table_data_updated['experience'] = True
+
+    def get_experience(self):
+        return self._table_data.get('experience')
     
 
-    def get_comment(self, project_id: str, comment_id: str):
-        return self._table_data.get(project_id)[comment_id]
-    
+    def create_thread(self, thread_url: str, data):
+        self._table_data[thread_url] = data
+        self._table_data_updated[thread_url] = True
 
-    def update_project(self, project_id: str, data):
-        if project_id in self._table_data:
+    def update_thread(self, thread_url: str, data):
+        if thread_url in self._table_data:
             # Update existing dictionary with new data
-            self._table_data[project_id].update(data)
+            self._table_data[thread_url].update(data)
         else:
-            # If project_id does not exist, just set it
-            self._table_data[project_id] = data
+            # If thread_url does not exist, just set it
+            self._table_data[thread_url] = data
 
-        self._table_data_updated[project_id] = True
-        # TODO : Move this to a separate thread
-        self._persist_data()
+        self._table_data_updated[thread_url] = True
 
+    def get_thread(self, thread_url: str):
+        return self._table_data.get(thread_url)
+    
 
-    def update_comment(self, project_id: str, comment_id: str, data):
-        if project_id in self._table_data:
-            if comment_id in self._table_data[project_id]:
-                self._table_data[project_id][comment_id].update(data)
-            else:
-                self._table_data[project_id][comment_id] = data
+    def update_threads_comment(self, thread_url: str, comment_id: str, data):
+        if thread_url in self._table_data:
+            self._table_data[thread_url][comment_id].update(data)
         else:
-            print('[ERROR] | Project id {project_id} not found...')
+            print('[ERROR] | thread id {thread_url} not found...')
             return
 
-        self._table_data_updated[project_id] = True
-        # TODO : Move this to a separate thread
-        self._persist_data()
+        self._table_data_updated[thread_url] = True
 
+    def get_thread_comment(self, thread_url: str, comment_id: str):
+        return self._table_data.get(thread_url)[comment_id]
+    
 
-    def _read_or_create_project(self, project_id: str, data):
-        try:
-            project_data = self.database_service.load_project(project_id)
-            if project_data is None or not project_data:
-                print("Creating new project...")
-                project_data = self.database_service.create_or_update_project(project_id, data)
+    def _background_persist_data(self):
+        while True:
+            self._persist_data()
+            time.sleep(2)
 
-            return project_data
-        except exception:
-            pass
-
-
+            
     def _persist_data(self):
-        for project_id, data in self._table_data.items():
-            if self._table_data_updated.get(project_id, False):
-                self.database_service.create_or_update_project(project_id, data)
-                self._table_data_updated[project_id] = False
+        for thread_url, data in self._table_data.items():
+            if self._table_data_updated.get(thread_url, False):
+                print(f"Updating {thread_url}...")
+                self.database_service.create_or_update_thread(thread_url, data)
+                self._table_data_updated[thread_url] = False
 
 

@@ -1,6 +1,6 @@
 import time
 
-def meets_filter_criteria(project_id, comment_id, db):
+def meets_filter_criteria(thread_url, comment_id, db):
     time.sleep(0.2)
-    db.update_comment(project_id, comment_id, {'filter': 'Done'})
+    db.update_threads_comment(thread_url, comment_id, {'filter': 'Done'})
     return True

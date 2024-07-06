@@ -6,26 +6,32 @@ class DatabaseService:
     def __init__(self):
         self.filename = "data.json"
 
-    def load_project(self, project_id: str):
+    def load_table_data(self):
         try:
             with open(self.filename, "r") as file:
                 data = json.load(file)
                 if data:
-                    return data.get(project_id, None)
+                    print("Table data exists...")
+                    return data
                 else:
-                    return None
+                    print("Table data does not exist, returning empty {}...")
+                    return {}
         except (FileNotFoundError, json.JSONDecodeError):
-            return None
+            return {}
 
 
-    def create_or_update_project(self, project_id: str, project_data):
+    def create_or_update_thread(self, thread_url: str, thread_data):
         try:
             with open(self.filename, "r") as file:
                 all_data = json.load(file)
-        except (FileNotFoundError, json.JSONDecodeError):
+        except FileNotFoundError as e:
+            print("[ERROR] | While creating/updating thread, could not find existing file..." , e)
+            all_data = {}
+        except (json.JSONDecodeError) as ej:
+            print("[ERROR] | While creating/updating thread, Json decode error..." , e)
             all_data = {}
 
         with open(self.filename, "w") as file:
-            all_data[project_id] = project_data
+            all_data[thread_url] = thread_data
             json.dump(all_data, file)
-            return all_data[project_id]
+            return all_data[thread_url]
