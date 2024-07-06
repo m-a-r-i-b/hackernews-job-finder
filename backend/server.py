@@ -3,7 +3,6 @@ from models import Criteria, Experience, ThreadDetails
 from persistence.fake_database import Database
 from scraper import scrap_comments
 from worker import process_comments_in_background
-import time
 
 app = FastAPI()
 db = Database()
