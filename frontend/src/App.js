@@ -5,11 +5,13 @@ import Threads from './pages/Threads';
 import Experience from './pages/Experience';
 import Criteria from './pages/Criteria';
 import ThreadDetails from './pages/ThreadDetails';
+import { SocketProvider } from './SocketContext';
 
 const { Header, Content } = Layout;
 
 const App = () => {
   return (
+    <SocketProvider>
     <Layout>
       <Header>
         <Menu theme="dark" mode="horizontal">
@@ -33,6 +35,7 @@ const App = () => {
         </Routes>
       </Content>
     </Layout>
+    </SocketProvider>
   );
 };
 

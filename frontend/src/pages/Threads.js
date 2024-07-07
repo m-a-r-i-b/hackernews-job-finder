@@ -8,7 +8,7 @@ const Threads = () => {
   const [threads, setThreads] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [title, setTitle] = useState('');
-  const [url, setUrl] = useState('');
+  const [url, setUrl] = useState('https://news.ycombinator.com/item?id=40224213');
 
   const fetchThreads = async () => {
     try {

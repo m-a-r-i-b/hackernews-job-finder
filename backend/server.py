@@ -1,3 +1,4 @@
+import asyncio
 import json
 import time
 from fastapi import FastAPI, BackgroundTasks, WebSocket, WebSocketDisconnect
@@ -40,9 +41,10 @@ async def websocket_endpoint(websocket: WebSocket):
 async def test_socket():
     socket_payload = {
         'thread_url': "1",
-        'comment_id': "2",
+        'key': "2",
         'payload': {
-            'filter': 'Done'
+            'filter': 'F',
+            "categorize": "C"
         }
     }
 
@@ -55,7 +57,7 @@ async def test_socket():
 
 
 @app.post("/submit-thread/")
-async def submit_item(thread: ThreadDetails, background_tasks: BackgroundTasks):
+async def submit_item(thread: ThreadDetails):
     if not db.get_experience():
         return {"status": "error", "msg": "Experience not set."}
     
@@ -64,7 +66,8 @@ async def submit_item(thread: ThreadDetails, background_tasks: BackgroundTasks):
     
     comments_dict = scrap_comments(thread.url)
     db.create_thread(thread.title, thread.url, comments_dict)
-    background_tasks.add_task(process_comments_in_background, comments_dict, thread.url, db, frontend_websocket)
+    asyncio.create_task(process_comments_in_background(comments_dict, thread.url, db, frontend_websocket))
+    # process_comments_in_background(comments_dict, thread.url, db, frontend_websocket)
 
     return {"title": thread.title, "url": thread.url}
 
