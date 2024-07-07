@@ -25,7 +25,7 @@ app.add_middleware(
 )
 db = Database()
 task_queue = queue.Queue()
-frontend_websocket = {}
+frontend_websocket = {} # Has to be an object to be able to pass by reference
 
 start_workers(5, task_queue, frontend_websocket)
 
@@ -73,7 +73,7 @@ async def submit_item(thread: ThreadDetails,  background_tasks: BackgroundTasks)
     db.create_thread(thread.title, thread.url, comments_dict)
     
     for comment_id in comments_dict.keys():
-        task_queue.put(comment_id)
+        task_queue.put((thread.url, comment_id, db))
     # loop = asyncio.get_event_loop()
     # background_tasks.add_task(run_in_thread, process_comments_in_background, thread.url, comments_dict, db, frontend_websocket, loop)
    
