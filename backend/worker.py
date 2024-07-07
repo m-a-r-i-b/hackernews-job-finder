@@ -17,7 +17,11 @@ def start_workers(num_workers, task_queue, websocket):
 def worker(task_queue, websocket):
     while True:
         thread_url, comment_id,  db = task_queue.get()
-        asyncio.run(process_comment(thread_url, comment_id, db, websocket))
+        try:
+            asyncio.run(process_comment(thread_url, comment_id, db, websocket))
+        except Exception as e:
+            print(f"-- Failed to process comment: {comment_id}", e)
+            # Maybe push update to FE to unhide processing status
         task_queue.task_done()
 
 

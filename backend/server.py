@@ -12,7 +12,8 @@ from persistence.fake_database import Database
 from scraper import scrap_comments
 from worker import start_workers
 from typing import List
-
+from dotenv import load_dotenv
+load_dotenv(".env")
 
 
 app = FastAPI()
