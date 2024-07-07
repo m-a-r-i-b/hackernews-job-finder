@@ -10,7 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from models import Criteria, Experience, ThreadDetails
 from persistence.fake_database import Database
 from scraper import scrap_comments
-from worker import process_comments_in_background
+from worker import start_workers
 from typing import List
 
 
@@ -25,43 +25,14 @@ app.add_middleware(
 )
 db = Database()
 task_queue = queue.Queue()
+frontend_websocket = {}
 
-
-def worker():
-    while True:
-        key = task_queue.get()
-        
-        time.sleep(random.uniform(0, 1))
-
-        socket_payload = {
-            'thread_url': "2",
-            'key': str(key),
-            'payload': {
-                'filter': 'KK'
-            }
-        }
-        try:
-            print("trying to send data to FE")
-            asyncio.run(frontend_websocket.send_text(json.dumps(socket_payload)))
-            
-        except Exception as e:
-            print("Error sending data to frontend", e)
-        
-        # Mark the task as done
-        task_queue.task_done()
-
-def start_workers(num_workers):
-    executor = ThreadPoolExecutor(max_workers=num_workers)
-    for _ in range(num_workers):
-        executor.submit(worker)
-
-start_workers(5)
+start_workers(5, task_queue, frontend_websocket)
 
 @app.websocket("/socket-endpoint")
 async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
-    global frontend_websocket
-    frontend_websocket = websocket  # Add websocket to the list
+    frontend_websocket['socket'] = websocket  # Add websocket to the list
     try:
         while True:
             data = await websocket.receive_text()
@@ -88,11 +59,6 @@ async def test_socket():
     except Exception as e:
         print("Error sending data to frontend", e)
 
-
-def run_in_thread(func, *args):
-    executor = ThreadPoolExecutor(max_workers=5)
-    future = executor.submit(func, *args)
-    future.result() 
     
 
 @app.post("/submit-thread/")
