@@ -4,7 +4,7 @@ import time
 from fastapi import WebSocket
 
 
-async def meets_filter_criteria(thread_url, comment_id, db, frontend_websocket: WebSocket):
+async def meets_filter_criteria(thread_url, comment_id, db, frontend_websocket):
     # time.sleep(0.2)
     await asyncio.sleep(0.2)
     socket_payload = {
