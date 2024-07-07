@@ -9,15 +9,12 @@ const ThreadDetails = () => {
   const [visible, setVisible] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
   const [dataSource, setDataSource] = useState([]);
-  // const [ws, setWs] = useState(null);
   const socket = useSocket();
-
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const decodedUrl = atob(url);
-        console.log("url = ", decodedUrl);
         const response = await axios.get(`http://127.0.0.1:8000/get-thread-by-url/?url=${decodedUrl}`);
         const commentsDict = response.data.comments;
         const commentsList = Object.entries(commentsDict).map(([key, value]) => ({ key, ...value }));
@@ -34,10 +31,9 @@ const ThreadDetails = () => {
   useEffect(() => {
     if (socket) {
       socket.onmessage = (event) => {
-        console.log("socket event = ", event)
         console.log("socket event data = ", event.data)
         const updatedComment = JSON.parse(event.data);
-        console.log("updated comment = ", updatedComment)
+        console.log("Parsed comment = ", updatedComment)
         setDataSource((dataSource) =>
           dataSource.map((comment) =>
             comment.key === updatedComment.key ? { ...comment,...updatedComment, ...updatedComment.payload }  : comment
@@ -46,34 +42,6 @@ const ThreadDetails = () => {
       };
     }
   }, [socket]);
-
-  // useEffect(() => {
-  //   console.log('Connecting to WebSocket');
-  //   const socket = new WebSocket('ws://127.0.0.1:8000/socket-endpoint');
-  //   console.log('Connected to WebSocket',socket);
-  //   setWs(socket);
-
-  //   socket.onmessage = (event) => {
-  //     console.log("socket event = ", event)
-  //     console.log("socket event data = ", event.data)
-  //     const updatedComment = JSON.parse(event.data);
-  //     console.log("updated comment = ", updatedComment)
-  //     setDataSource((dataSource) =>
-  //       dataSource.map((comment) =>
-  //         comment.key === updatedComment.key ? { ...comment,...updatedComment, ...updatedComment.payload }  : comment
-  //       )
-  //     );
-  //   };
-
-  //   // socket.onclose = () => {
-  //   //   console.log('WebSocket connection closed');
-  //   // };
-
-  //   // return () => {
-  //   //   console.log('Closing the WebSocket connection');
-  //   //   socket.close();
-  //   // };
-  // }, [url]);
 
   const columns = [
     {
@@ -116,6 +84,7 @@ const ThreadDetails = () => {
       <Table
         dataSource={dataSource}
         columns={columns}
+        pagination={false}
         onRow={(record) => ({
           onClick: () => handleRowClick(record),
         })}
