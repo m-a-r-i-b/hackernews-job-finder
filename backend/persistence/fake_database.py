@@ -69,7 +69,7 @@ class Database:
         if self._table_data_updated:
             print(f"Persisting table to db...")
             for key, value in self._table_data.items():
-                self._table_data = self._database_service.create_or_update_table(key, value)
+                self._database_service.create_or_update_table(key, value)
                 self._table_data_updated = False
 
 
