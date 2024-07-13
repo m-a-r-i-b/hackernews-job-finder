@@ -21,7 +21,7 @@ def worker(task_queue, websocket):
             asyncio.run(process_comment(thread_url, comment_id, db, websocket))
         except Exception as e:
             print(f"-- Failed to process comment: {comment_id}", e)
-            # Maybe push update to FE to unhide processing status
+            # TODO Maybe push update to FE to unhide processing status
         task_queue.task_done()
 
 

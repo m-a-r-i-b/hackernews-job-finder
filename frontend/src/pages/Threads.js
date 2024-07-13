@@ -9,6 +9,7 @@ const Threads = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [title, setTitle] = useState('');
   const [url, setUrl] = useState('https://news.ycombinator.com/item?id=40224213');
+  const [loading, setLoading] = useState(false);
 
   const fetchThreads = async () => {
     try {
@@ -37,6 +38,7 @@ const Threads = () => {
   };
 
   const handleAddThread = async () => {
+    setLoading(true);
     try {
       const response = await axios.post('http://127.0.0.1:8000/submit-thread/', {
         title: title,
@@ -46,9 +48,11 @@ const Threads = () => {
 
       setModalVisible(false);
       fetchThreads();
-      navigateToDetailsPage(url)
+      navigateToDetailsPage(url);
     } catch (error) {
       console.error('Error adding thread:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -66,9 +70,11 @@ const Threads = () => {
 
       <Modal
         title="Create New Thread"
-        visible={modalVisible}
+        open={modalVisible}
         onOk={handleAddThread}
         onCancel={handleModalClose}
+        confirmLoading={loading}
+        okButtonProps={{ disabled: loading }}
       >
         <Form layout="vertical">
           <Form.Item label="Title">

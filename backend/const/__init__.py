@@ -44,7 +44,6 @@ ANTHROPIC_MODELS = [AgentBrainModel.Claude_Opus, AgentBrainModel.Claude_Sonnet]
 
 
 EXECUTION_PLAN = [
-    Step.Scraping,
     Step.Filtering,
     Step.Resume_Parsing,
     Step.Cover_Letter_Generation

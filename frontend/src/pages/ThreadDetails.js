@@ -91,7 +91,7 @@ const ThreadDetails = () => {
       />
       <Modal
         title="Row Details"
-        visible={visible}
+        open={visible}
         onCancel={handleCancel}
         onOk={handleCancel}
       >
