@@ -17,7 +17,7 @@ def scrap_comments(url):
             commentText = comment.find('div', class_='commtext').get_text()
             if commentText:
                 commentCount += 1
-                comments_dict[commentCount] = {'text':commentText}
+                comments_dict[str(commentCount)] = {'text':commentText}
 
     print(f"Scraped {commentCount} top-level comments.")
     return comments_dict

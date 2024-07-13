@@ -36,4 +36,4 @@ class DatabaseService:
         with open(self.filename, "w") as file:
             all_data[key] = value
             json.dump(all_data, file)
-            return all_data[key]
+            return all_data

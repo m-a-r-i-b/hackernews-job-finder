@@ -2,6 +2,8 @@ import { Tag } from 'antd';
 import { assignColorToKeyword } from '../../Utils';
 import { Checkbox } from 'antd';
 import axios from 'axios';
+import BlinkingDot from '../../components/blinking_dot/BlinkingDot';
+import ProcessingDot from '../../components/processing_dot/ProcessingDot';
 
 
 export const columns = [
@@ -23,14 +25,18 @@ export const columns = [
     dataIndex: 'IS_REMOTE_WORK_ALLOWED',
     key: 'IS_REMOTE_WORK_ALLOWED',
     width: 120,
+    ellipsis: true,
     filters: [
       { text: 'Yes', value: 'true' },
       { text: 'No', value: 'false' },
     ],
     onFilter: (value, record) => record.IS_REMOTE_WORK_ALLOWED === value,
     render: (value) => {
+      if (value === 'PROCESSING') {
+        return <ProcessingDot />;
+      }
       if (value === undefined || value === null) {
-        return '';
+        return <BlinkingDot />;
       }
       return (
         <Tag color={value == 'true' ? 'green' : 'red'}>
@@ -43,14 +49,23 @@ export const columns = [
     title: 'Role',
     dataIndex: 'EXTRACT_ROLES',
     key: 'EXTRACT_ROLES',
+    render: (value) => {
+      if (value === 'PROCESSING') {
+        return <ProcessingDot />;
+      }
+      return value === undefined ? <BlinkingDot /> : value;
+    },
   },
   {
     title: 'Keywords',
     dataIndex: 'EXTRACT_KEYWORDS',
     key: 'EXTRACT_KEYWORDS',
     render: (keywords) => {
+      if (keywords === 'PROCESSING') {
+        return <ProcessingDot />;
+      }
       if (!keywords) {
-        return '';
+        return <BlinkingDot />;
       }
       return keywords.split(',').map((keyword, index) => {
         const trimmedKeyword = keyword.trim().toLowerCase();
@@ -68,6 +83,12 @@ export const columns = [
     title: 'Contact Info',
     dataIndex: 'EXTRACT_CONTRACT_INFO',
     key: 'EXTRACT_CONTRACT_INFO',
+    render: (value) => {
+      if (value === 'PROCESSING') {
+        return <ProcessingDot />;
+      }
+      return value === undefined ? <BlinkingDot /> : value;
+    },
   },
   {
     title: 'Action',
