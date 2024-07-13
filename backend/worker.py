@@ -3,8 +3,11 @@ import json
 import random
 import time
 import queue
+from agents import STEP_TO_AGENT_MAPPING
+from utils import construct_socket_message, notify_frontend_of_processing_status, notify_frontend
+from const import EXECUTION_PLAN, Step
 from steps.categorize import categorize
-from steps.filter import meets_filter_criteria
+from steps.is_remote import is_remote
 
 
 def start_workers(num_workers, task_queue, websocket):
@@ -16,20 +19,31 @@ def start_workers(num_workers, task_queue, websocket):
 
 def worker(task_queue, websocket):
     while True:
-        thread_url, comment_id,  db = task_queue.get()
+        thread_url, comment_id, comment_text,  db = task_queue.get()
         try:
-            asyncio.run(process_comment(thread_url, comment_id, db, websocket))
+            asyncio.run(process_comment(thread_url, comment_id, comment_text, db, websocket))
         except Exception as e:
             print(f"-- Failed to process comment: {comment_id}", e)
             # TODO Maybe push update to FE to unhide processing status
         task_queue.task_done()
 
 
-async def process_comment(thread_url, comment_id, db, websocket):
-    if(await meets_filter_criteria(thread_url, comment_id, db, websocket)):
-        pass
-        # categorize(thread_url, comment_id, db)
-        # extract_contact_info(thread_url, comment_id, db)
-        # generate_cover_letter(thread_url, comment_id, db)
+async def process_comment(thread_url, comment_id, comment_text, db, websocket):
+
+    for step in EXECUTION_PLAN:
+        try:
+            await notify_frontend_of_processing_status(thread_url, comment_id, step, websocket)
+            agent_for_step = STEP_TO_AGENT_MAPPING[step]
+            output = json.loads(agent_for_step().run(comment_text).json())
+            print("Output = ",output)
+
+            await notify_frontend(construct_socket_message(thread_url,comment_id, step, output), websocket)
+            db.update_threads_comment(thread_url, comment_id, {step: output})
+
+            if step == Step.IS_REMOTE_WORK_ALLOWED and (not output['allows_remote_work']):
+                return # No need to process remaining steps if remote work is not allowed
+        except Exception as e:
+                print(f"Error processing comment {comment_id}", e)
+        
     return f"Comment {id} processed"
 

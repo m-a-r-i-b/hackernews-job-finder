@@ -2,7 +2,6 @@ from const import AgentBrainModel
 from const import GPT_MODELS, ANTHROPIC_MODELS
 from langchain_openai import ChatOpenAI
 from const import FORMAT_INSTRUCTIONS_KEY, USER_MSG_KEY
-from agents.base.AgentOutput import AgentOutput
 from langchain_core.output_parsers import JsonOutputParser
 import time
 from pydantic import ValidationError
@@ -41,7 +40,7 @@ class Agent():
             raise ValueError("Invalid agent type provided.")
 
 
-    def _runGPT(self, user_msg: str) -> AgentOutput:
+    def _runGPT(self, user_msg: str):
 
         retry_delay = AGENT_INITIAL_RETRY_DELAY
         attempt = 0

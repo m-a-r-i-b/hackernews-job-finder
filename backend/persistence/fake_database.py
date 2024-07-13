@@ -56,7 +56,7 @@ class Database:
         self._table_data_updated = True
 
     def get_thread_comment(self, url: str, comment_id: str):
-        return self._table_data.get(url)['comments'][comment_id]
+        return self._table_data.get(url)['comments'][comment_id]['text']
     
 
     def _background_persist_data(self):

@@ -64,23 +64,19 @@ async def test_socket():
 
 @app.post("/submit-thread/")
 async def submit_item(thread: ThreadDetails,  background_tasks: BackgroundTasks):
-    if not db.get_experience():
-        return {"status": "error", "msg": "Experience not set."}
+    # if not db.get_experience():
+    #     return {"status": "error", "msg": "Experience not set."}
     
-    if not db.get_criteria():
-        return {"status": "error", "msg": "Criteria not set."}
+    # if not db.get_criteria():
+    #     return {"status": "error", "msg": "Criteria not set."}
     
     comments_dict = scrap_comments(thread.url)
     db.create_thread(thread.title, thread.url, comments_dict)
     
     for comment_id in comments_dict.keys():
-        task_queue.put((thread.url, comment_id, db))
-    # loop = asyncio.get_event_loop()
-    # background_tasks.add_task(run_in_thread, process_comments_in_background, thread.url, comments_dict, db, frontend_websocket, loop)
-   
-    # asyncio.create_task(process_comments_in_background(comments_dict, thread.url, db, frontend_websocket))
-    # process_comments_in_background(comments_dict, thread.url, db, frontend_websocket)
-
+        task_queue.put((thread.url, comment_id, comments_dict[comment_id]['text'], db))
+        break
+  
     return {"title": thread.title, "url": thread.url}
 
 @app.get("/get-threads/")

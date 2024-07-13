@@ -1,21 +1,21 @@
 from agents.base.Agent import Agent
-from agents.filter.output import (
-    FilterAgentOutput,
+from agents.test.output import (
+    TestOutput,
 )
 from const import AgentBrainModel
-from agents.filter.prompt.renderer import get_chat_prompt
+from agents.test.prompt.renderer import get_chat_prompt
 
 
-class FilterAgent(Agent):
+class TestAgent(Agent):
     def __init__(
         self,
         brain_model: AgentBrainModel = AgentBrainModel.GPT_3_5_Turbo_0125,
     ):
         prompt = get_chat_prompt()
-        agent_output_class = FilterAgentOutput
+        agent_output_class = TestOutput
         super().__init__(brain_model, prompt, agent_output_class)
 
     def run(
         self, user_msg: str
-    ) -> FilterAgentOutput:
+    ) -> TestOutput:
         return super().run(user_msg)

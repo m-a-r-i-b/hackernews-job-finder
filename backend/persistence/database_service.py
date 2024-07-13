@@ -30,7 +30,7 @@ class DatabaseService:
             print("[ERROR] | While creating/updating thread, could not find existing file..." , e)
             all_data = EMPTY_TABLE
         except (json.JSONDecodeError) as ej:
-            print("[ERROR] | While creating/updating thread, Json decode error..." , e)
+            # print("[ERROR] | While creating/updating thread, Json decode error or perhaps an empty file..." , ej)
             all_data = EMPTY_TABLE
 
         with open(self.filename, "w") as file:

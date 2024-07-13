@@ -33,12 +33,26 @@ const ThreadDetails = () => {
       socket.onmessage = (event) => {
         console.log("socket event data = ", event.data)
         const updatedComment = JSON.parse(event.data);
+
+        if (updatedComment.payload){
+          if (updatedComment.payload.IS_REMOTE_WORK_ALLOWED){
+            // Check if If updatedComment.payload.IS_REMOTE_WORK_ALLOWED is of type object, 
+            // extract allows_remote_work key and assign it to IS_REMOTE_WORK_ALLOWED
+            // Otherwise dont change anything
+            if (typeof updatedComment.payload.IS_REMOTE_WORK_ALLOWED === 'object'){
+              updatedComment.payload.IS_REMOTE_WORK_ALLOWED = String(updatedComment.payload.IS_REMOTE_WORK_ALLOWED.allows_remote_work)
+            }
+          }
+        }
+
+
         console.log("Parsed comment = ", updatedComment)
         setDataSource((dataSource) =>
-          dataSource.map((comment) =>
-            comment.key === updatedComment.key ? { ...comment,...updatedComment, ...updatedComment.payload }  : comment
+          dataSource.map((comment) => 
+            comment.key === updatedComment.comment_id ? { ...comment,...updatedComment, ...updatedComment.payload }  : comment
           )
         );
+
       };
     }
   }, [socket]);
@@ -58,9 +72,9 @@ const ThreadDetails = () => {
       ellipsis: true,
     },
     {
-      title: 'filter',
-      dataIndex: 'filter',
-      key: 'filter',
+      title: 'Allows Remote Work',
+      dataIndex: 'IS_REMOTE_WORK_ALLOWED',
+      key: 'IS_REMOTE_WORK_ALLOWED',
     },
     {
       title: 'categorize',

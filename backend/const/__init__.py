@@ -5,8 +5,11 @@ from enum import Enum
 class Step(str, Enum):
     Resume_Parsing = "Resume_Parsing"
     Scraping = "Scraping"
-    Filtering = "Filtering"
+    IS_REMOTE_WORK_ALLOWED = "IS_REMOTE_WORK_ALLOWED"
     Cover_Letter_Generation = "Cover_Letter_Generation"
+
+    def __str__(self) -> str:
+        return str.__str__(self)
     
 
 
@@ -44,7 +47,7 @@ ANTHROPIC_MODELS = [AgentBrainModel.Claude_Opus, AgentBrainModel.Claude_Sonnet]
 
 
 EXECUTION_PLAN = [
-    Step.Filtering,
-    Step.Resume_Parsing,
-    Step.Cover_Letter_Generation
+    Step.IS_REMOTE_WORK_ALLOWED,
+    # Step.Resume_Parsing,
+    # Step.Cover_Letter_Generation
 ]
