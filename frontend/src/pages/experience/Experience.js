@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { Upload, Button, message, Input } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import axios from 'axios';
+import { BASE_URL } from '../../Constants';
 
 const Experience = () => {
   const [file, setFile] = useState(null);
   const [content, setContent] = useState('');
 
   useEffect(() => {
-    axios.get('http://127.0.0.1:8000/get-experience/')
+    axios.get(`${BASE_URL}/get-experience/`)
       .then(response => {
         setContent(response.data);
       })
@@ -30,7 +31,7 @@ const Experience = () => {
   };
 
   const handleSave = () => {
-    axios.post('http://127.0.0.1:8000/submit-experience/', {
+    axios.post(`${BASE_URL}/submit-experience/`, {
       experience: content
     })
     .then(response => {

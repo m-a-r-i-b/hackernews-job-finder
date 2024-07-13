@@ -1,10 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Modal } from 'antd';
+import { Table, Modal, Switch } from 'antd';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { useSocket } from '../../SocketContext';
 import { columns } from './Columns';
-import { parseComment } from './CommentParser';
+import { parseComment } from '../../Utils';
+import { remoteWorkColumnRenderer } from '../../components/column_renderers/RemoteWorkAllowed';
+import { roleRenderer } from '../../components/column_renderers/Role';
+import { contactInfoRenderer } from '../../components/column_renderers/ContactInfo';
+import { keyworkRenderer } from '../../components/column_renderers/Keyword';
+import { BASE_URL } from '../../Constants';
+
 
 const ThreadDetails = () => {
   const { url } = useParams();
@@ -17,7 +23,7 @@ const ThreadDetails = () => {
     const fetchData = async () => {
       try {
         const decodedUrl = atob(url);
-        const response = await axios.get(`http://127.0.0.1:8000/get-thread-by-url/?url=${decodedUrl}`);
+        const response = await axios.get(`${BASE_URL}/get-thread-by-url/?url=${decodedUrl}`);
         const commentsDict = response.data.comments;
         let commentsList = Object.entries(commentsDict).map(([key, value]) => ({ key, ...value }));
         console.log("comments List = ",commentsList)
@@ -58,6 +64,24 @@ const ThreadDetails = () => {
     setSelectedRow(null);
   };
 
+
+  const toggleReadStatus = async (status) => {
+    const url = window.location.href.split("/").pop();
+    const decodedUrl = atob(url);
+
+    try {
+      await axios.post(`${BASE_URL}/update-comment-read-status`, {
+        thread_url: decodedUrl,
+        comment_id: selectedRow.key,
+        is_read: status,
+      });
+      selectedRow.is_read = status;
+      console.log(`Comment ${selectedRow.key} read status updated successfully!`);
+    } catch (error) {
+      console.error('Error updating read status:', error);
+    }
+  };
+
   return (
     <div style={{ padding: '20px' }}>
       <Table
@@ -69,17 +93,32 @@ const ThreadDetails = () => {
         })}
       />
       <Modal
-        title="Row Details"
+        title={
+        selectedRow && (<div style={{paddingRight: '20px',  display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div>
+            <b># {selectedRow.key}</b> {roleRenderer(selectedRow.EXTRACT_ROLES)}
+          </div>
+          <div>
+            <b>Remote :</b> {remoteWorkColumnRenderer(selectedRow.IS_REMOTE_WORK_ALLOWED)}
+          </div>
+        </div>)
+        }
         open={visible}
         onCancel={handleCancel}
         onOk={handleCancel}
+        footer={[
+          <Switch key={selectedRow && selectedRow.key} checked={selectedRow && selectedRow.is_read} onChange={toggleReadStatus} />
+        ]}
       >
         {selectedRow && (
           <div>
-            <p>Comment Id: {selectedRow.key}</p>
-            <p>Text: {selectedRow.text}</p>
-            <p>Filter: {selectedRow.filter}</p>
-            <p>Categorize: {selectedRow.categorize}</p>
+            <br></br>
+            <p>{selectedRow.text}</p>
+            <hr></hr>
+            <br></br>
+            {keyworkRenderer(selectedRow.EXTRACT_KEYWORDS)}
+            <br></br><br></br>
+            <p><b>Contact :</b> {contactInfoRenderer(selectedRow.EXTRACT_CONTACT_INFO)}</p>
           </div>
         )}
       </Modal>

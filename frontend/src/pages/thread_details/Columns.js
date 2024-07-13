@@ -1,10 +1,10 @@
-import { Tag } from 'antd';
-import { assignColorToKeyword } from '../../Utils';
 import { Checkbox } from 'antd';
 import axios from 'axios';
-import BlinkingDot from '../../components/blinking_dot/BlinkingDot';
-import ProcessingDot from '../../components/processing_dot/ProcessingDot';
-
+import { remoteWorkColumnRenderer } from '../../components/column_renderers/RemoteWorkAllowed';
+import { roleRenderer } from '../../components/column_renderers/Role';
+import { keyworkRenderer } from '../../components/column_renderers/Keyword';
+import { contactInfoRenderer } from '../../components/column_renderers/ContactInfo';
+import { BASE_URL } from '../../Constants';
 
 export const columns = [
   {
@@ -31,68 +31,43 @@ export const columns = [
       { text: 'No', value: 'false' },
     ],
     onFilter: (value, record) => record.IS_REMOTE_WORK_ALLOWED === value,
-    render: (value) => {
-      if (value === 'PROCESSING') {
-        return <ProcessingDot />;
-      }
-      if (value === undefined || value === null) {
-        return <BlinkingDot />;
-      }
-      return (
-        <Tag color={value == 'true' ? 'green' : 'red'}>
-          {value == 'true' ? 'YES' : 'NO'}
-        </Tag>
-      );
-    },
+    render: (value) => remoteWorkColumnRenderer(value),
   },
   {
     title: 'Role',
     dataIndex: 'EXTRACT_ROLES',
     key: 'EXTRACT_ROLES',
-    render: (value) => {
-      if (value === 'PROCESSING') {
-        return <ProcessingDot />;
-      }
-      return value === undefined ? <BlinkingDot /> : value;
-    },
+    render: (value) => roleRenderer(value),
   },
   {
     title: 'Keywords',
     dataIndex: 'EXTRACT_KEYWORDS',
     key: 'EXTRACT_KEYWORDS',
-    render: (keywords) => {
-      if (keywords === 'PROCESSING') {
-        return <ProcessingDot />;
-      }
-      if (!keywords) {
-        return <BlinkingDot />;
-      }
-      return keywords.split(',').map((keyword, index) => {
-        const trimmedKeyword = keyword.trim().toLowerCase();
-        let languageColor = assignColorToKeyword(trimmedKeyword);
-
-        return (
-          <Tag key={index} color={languageColor || 'default'}>
-            {keyword.trim()}
-          </Tag>
-        );
-      });
-    },
+    render: (keywords) => keyworkRenderer(keywords),
   },
   {
     title: 'Contact Info',
-    dataIndex: 'EXTRACT_CONTRACT_INFO',
-    key: 'EXTRACT_CONTRACT_INFO',
-    render: (value) => {
-      if (value === 'PROCESSING') {
-        return <ProcessingDot />;
-      }
-      return value === undefined ? <BlinkingDot /> : value;
-    },
+    dataIndex: 'EXTRACT_CONTACT_INFO',
+    key: 'EXTRACT_CONTACT_INFO',
+    render: (value) => contactInfoRenderer(value),
   },
   {
-    title: 'Action',
+    title: 'Is Read',
     key: 'action',
+    filters: [
+      { text: 'Read', value: true },
+      { text: 'Unread', value: false },
+    ],
+    onFilter: (value, record) => {
+      if (value === true) {
+        return record.is_read === value;
+      }
+
+      if (value === false) {
+        return record.is_read === value || record.is_read === undefined;
+      }
+
+    },
     render: (text, record) => (
       <Checkbox
         checked={record.is_read} // Assuming 'read' is a property in your data
@@ -105,14 +80,11 @@ export const columns = [
 
 
 const handleCheckboxChange = async (record, checked) => {
-  // Update local state
   const url = window.location.href.split("/").pop();
   const decodedUrl = atob(url);
-  console.log("decoded url = ",decodedUrl)
-  console.log('record', record);
 
   try {
-    await axios.post(`http://127.0.0.1:8000/update-comment-read-status`, {
+    await axios.post(`${BASE_URL}/update-comment-read-status`, {
       thread_url: decodedUrl,
       comment_id: record.key,
       is_read: checked,
@@ -120,6 +92,5 @@ const handleCheckboxChange = async (record, checked) => {
     console.log(`Comment ${record.key} read status updated successfully!`);
   } catch (error) {
     console.error('Error updating read status:', error);
-    // Handle error state or retry logic here
   }
 };

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Card, Button, Modal, Form, Input } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { BASE_URL } from '../../Constants';
 
 const Threads = () => {
   const navigate = useNavigate();
@@ -13,7 +14,7 @@ const Threads = () => {
 
   const fetchThreads = async () => {
     try {
-      const response = await axios.get('http://127.0.0.1:8000/get-threads/');
+      const response = await axios.get(`${BASE_URL}/get-threads/`);
       setThreads(response.data);
       console.log("threads", response.data);
     } catch (error) {
@@ -40,7 +41,7 @@ const Threads = () => {
   const handleAddThread = async () => {
     setLoading(true);
     try {
-      const response = await axios.post('http://127.0.0.1:8000/submit-thread/', {
+      const response = await axios.post(`${BASE_URL}/submit-thread/`, {
         title: title,
         url: url
       });

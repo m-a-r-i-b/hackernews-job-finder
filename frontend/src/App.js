@@ -4,7 +4,6 @@ import { Route, Routes, useNavigate } from 'react-router-dom';
 import { Layout, Menu } from 'antd';
 import Threads from './pages/threads/Threads';
 import Experience from './pages/experience/Experience';
-import Criteria from './pages/criteria/Criteria';
 import ThreadDetails from './pages/thread_details/ThreadDetails';
 import { SocketProvider } from './SocketContext';
 
@@ -17,14 +16,9 @@ const items = [
     icon: <MailOutlined />,
   },
   {
-    label: 'Experience',
+    label: 'My Experience',
     key: 'experience',
     icon: <AppstoreOutlined />,
-  },
-  {
-    label: 'Criteria',
-    key: 'criteria',
-    icon: <SettingOutlined />,
   }
 ];
 
@@ -40,8 +34,6 @@ const App = () => {
       navigate('/');
     } else if (e.key === 'experience') {
       navigate('/experience');
-    } else if (e.key === 'criteria') {
-      navigate('/criteria');
     }
   };
 
@@ -55,7 +47,6 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Threads />} />
             <Route path="/experience" element={<Experience />} />
-            <Route path="/criteria" element={<Criteria />} />
             <Route path="/thread-details/:url" element={<ThreadDetails />} />
           </Routes>
         </Content>

@@ -55,7 +55,7 @@ async def submit_item(thread: ThreadDetails):
     for comment_id in comments_dict.keys():
         count += 1
         task_queue.put((thread.url, comment_id, comments_dict[comment_id]['text'], db))
-        if count == 5:
+        if count == 20:
             break
   
     return {"title": thread.title, "url": thread.url}
