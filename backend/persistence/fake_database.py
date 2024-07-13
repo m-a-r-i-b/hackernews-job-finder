@@ -51,9 +51,9 @@ class Database:
         else:
             print(f'[ERROR] | thread id {url} not found...')
             print("table data =  ", self._table_data)
-            return
 
         self._table_data_updated = True
+
 
     def get_thread_comment(self, url: str, comment_id: str):
         return self._table_data.get(url)['comments'][comment_id]['text']
