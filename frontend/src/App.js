@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { AppstoreOutlined, MailOutlined, SettingOutlined } from '@ant-design/icons';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import { Layout, Menu } from 'antd';
-import Threads from './pages/Threads';
-import Experience from './pages/Experience';
-import Criteria from './pages/Criteria';
-import ThreadDetails from './pages/ThreadDetails';
+import Threads from './pages/threads/Threads';
+import Experience from './pages/experience/Experience';
+import Criteria from './pages/criteria/Criteria';
+import ThreadDetails from './pages/thread_details/ThreadDetails';
 import { SocketProvider } from './SocketContext';
 
 const { Header, Content } = Layout;

@@ -27,7 +27,7 @@ def construct_socket_message(thread_url, comment_id, step, info) -> SocketMessag
     return {
         'thread_url': thread_url,
         'comment_id': str(comment_id),
-        'payload': {step: info}
+        step: info,
     }
 
 
