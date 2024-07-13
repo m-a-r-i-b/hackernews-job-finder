@@ -32,6 +32,7 @@ export function parseComment(msgObj){
             msgObj.EXTRACT_ROLES = '-'
             msgObj.EXTRACT_KEYWORDS = '-'
             msgObj.EXTRACT_CONTACT_INFO = '-'
+            msgObj.GENERATE_COVER_LETTER = '-'
 
           }
 
@@ -54,6 +55,12 @@ export function parseComment(msgObj){
       if (msgObj.EXTRACT_CONTACT_INFO){
         if (typeof msgObj.EXTRACT_CONTACT_INFO === 'object'){
           msgObj.EXTRACT_CONTACT_INFO = msgObj.EXTRACT_CONTACT_INFO.contact_info.join(', ')
+        }
+      }
+
+      if (msgObj.GENERATE_COVER_LETTER){
+        if (typeof msgObj.GENERATE_COVER_LETTER === 'object'){
+          msgObj.GENERATE_COVER_LETTER = msgObj.GENERATE_COVER_LETTER.cover_letter
         }
       }
   }

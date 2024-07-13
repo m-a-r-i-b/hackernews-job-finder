@@ -4,6 +4,7 @@ import { remoteWorkColumnRenderer } from '../../components/column_renderers/Remo
 import { roleRenderer } from '../../components/column_renderers/Role';
 import { keyworkRenderer } from '../../components/column_renderers/Keyword';
 import { contactInfoRenderer } from '../../components/column_renderers/ContactInfo';
+import { coverLetterRenderer } from '../../components/column_renderers/CoverLetter';
 import { BASE_URL } from '../../Constants';
 
 export const columns = [
@@ -50,6 +51,13 @@ export const columns = [
     dataIndex: 'EXTRACT_CONTACT_INFO',
     key: 'EXTRACT_CONTACT_INFO',
     render: (value) => contactInfoRenderer(value),
+  },
+  {
+    title: 'Cover Letter',
+    ellipsis: true,
+    dataIndex: 'GENERATE_COVER_LETTER',
+    key: 'GENERATE_COVER_LETTER',
+    render: (value) => coverLetterRenderer(value),
   },
   {
     title: 'Is Read',

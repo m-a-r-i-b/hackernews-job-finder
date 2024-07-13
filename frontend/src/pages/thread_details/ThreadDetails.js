@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Modal, Switch } from 'antd';
+import { Table, Modal, Switch, Button } from 'antd';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { useSocket } from '../../SocketContext';
@@ -10,6 +10,7 @@ import { roleRenderer } from '../../components/column_renderers/Role';
 import { contactInfoRenderer } from '../../components/column_renderers/ContactInfo';
 import { keyworkRenderer } from '../../components/column_renderers/Keyword';
 import { BASE_URL } from '../../Constants';
+import { CopyOutlined } from '@ant-design/icons';
 
 
 const ThreadDetails = () => {
@@ -82,6 +83,11 @@ const ThreadDetails = () => {
     }
   };
 
+  const copyToClipboard = () => {
+    const textToCopy = selectedRow ? selectedRow.GENERATE_COVER_LETTER : '';
+    navigator.clipboard.writeText(textToCopy)
+  };
+
   return (
     <div style={{ padding: '20px' }}>
       <Table
@@ -114,11 +120,19 @@ const ThreadDetails = () => {
           <div>
             <br></br>
             <p>{selectedRow.text}</p>
-            <hr></hr>
-            <br></br>
+            {/* <hr></hr> */}
             {keyworkRenderer(selectedRow.EXTRACT_KEYWORDS)}
             <br></br><br></br>
-            <p><b>Contact :</b> {contactInfoRenderer(selectedRow.EXTRACT_CONTACT_INFO)}</p>
+            <p><b>Apply at :</b> {contactInfoRenderer(selectedRow.EXTRACT_CONTACT_INFO)}</p>
+            <hr></hr>
+            <b>Cover Letter</b>
+            <hr></hr>
+            <span>{selectedRow.GENERATE_COVER_LETTER}</span><CopyOutlined
+              key="copy"
+              // icon={<CopyOutlined />}
+              onClick={copyToClipboard}
+              style={{ marginLeft: '8px' }}
+            />
           </div>
         )}
       </Modal>

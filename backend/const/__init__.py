@@ -7,8 +7,7 @@ class Step(str, Enum):
     EXTRACT_KEYWORDS = "EXTRACT_KEYWORDS"
     EXTRACT_ROLES = "EXTRACT_ROLES"
     EXTRACT_CONTACT_INFO = "EXTRACT_CONTACT_INFO"
-    
-    Cover_Letter_Generation = "Cover_Letter_Generation"
+    GENERATE_COVER_LETTER = "GENERATE_COVER_LETTER"
 
     def __str__(self) -> str:
         return str.__str__(self)
@@ -52,5 +51,6 @@ EXECUTION_PLAN = [
     Step.IS_REMOTE_WORK_ALLOWED,
     Step.EXTRACT_ROLES,
     Step.EXTRACT_KEYWORDS,
-    Step.EXTRACT_CONTACT_INFO
+    Step.EXTRACT_CONTACT_INFO,
+    Step.GENERATE_COVER_LETTER
 ]

@@ -9,6 +9,7 @@ from agents.is_remote.prompt.renderer import get_chat_prompt
 class IsRemoteAgent(Agent):
     def __init__(
         self,
+        db,
         brain_model: AgentBrainModel = AgentBrainModel.GPT_3_5_Turbo_0125,
     ):
         prompt = get_chat_prompt()
