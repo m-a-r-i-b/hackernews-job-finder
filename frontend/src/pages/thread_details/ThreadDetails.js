@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Modal, Switch, Button } from 'antd';
+import { Table, Modal, Switch, Card } from 'antd';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { useSocket } from '../../SocketContext';
@@ -18,6 +18,7 @@ const ThreadDetails = () => {
   const [visible, setVisible] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
   const [dataSource, setDataSource] = useState([]);
+  const [threadDetails, setThreadDetails] = useState({});
   const socket = useSocket();
 
   useEffect(() => {
@@ -26,6 +27,10 @@ const ThreadDetails = () => {
         const decodedUrl = atob(url);
         const response = await axios.get(`${BASE_URL}/get-thread-by-url/?url=${decodedUrl}`);
         const commentsDict = response.data.comments;
+        setThreadDetails({
+          'title': response.data.title,
+          'url': decodedUrl,
+        });
         let commentsList = Object.entries(commentsDict).map(([key, value]) => ({ key, ...value }));
         console.log("comments List = ",commentsList)
         commentsList.forEach((comment) =>  parseComment(comment));
@@ -89,7 +94,11 @@ const ThreadDetails = () => {
   };
 
   return (
-    <div style={{ padding: '20px' }}>
+    <div style={{ textAlign: 'center' }}>
+      <Card
+        style={{ textAlign: 'center', marginBottom: '20px' }}
+        title={<h3 style={{ margin: '0', textAlign: 'center' }}>{threadDetails.title} | <a href={threadDetails.url}>{threadDetails.url}</a></h3>}
+     >
       <Table
         dataSource={dataSource}
         columns={columns}
@@ -100,14 +109,16 @@ const ThreadDetails = () => {
       />
       <Modal
         title={
-        selectedRow && (<div style={{paddingRight: '20px',  display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div>
-            <b># {selectedRow.key}</b> {roleRenderer(selectedRow.EXTRACT_ROLES)}
-          </div>
-          <div>
-            <b>Remote :</b> {remoteWorkColumnRenderer(selectedRow.IS_REMOTE_WORK_ALLOWED)}
-          </div>
-        </div>)
+          selectedRow && (
+            <div style={{ paddingRight: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div>
+                <b># {selectedRow.key}</b> {roleRenderer(selectedRow.EXTRACT_ROLES)}
+              </div>
+              <div>
+                <b>Remote :</b> {remoteWorkColumnRenderer(selectedRow.IS_REMOTE_WORK_ALLOWED)}
+              </div>
+            </div>
+          )
         }
         open={visible}
         onCancel={handleCancel}
@@ -136,8 +147,10 @@ const ThreadDetails = () => {
           </div>
         )}
       </Modal>
+      </Card>
     </div>
   );
+  
 };
 
 export default ThreadDetails;

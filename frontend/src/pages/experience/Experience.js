@@ -3,7 +3,6 @@ import { Upload, Button, message, Input, Spin, Typography } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import { BASE_URL } from '../../Constants';
-
 const { Title } = Typography;
 
 const Experience = () => {

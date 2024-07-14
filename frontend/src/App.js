@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { AppstoreOutlined, MailOutlined, SettingOutlined } from '@ant-design/icons';
-import { Route, Routes, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { AppstoreOutlined, MailOutlined } from '@ant-design/icons';
+import { Route, Routes, useNavigate, useLocation } from 'react-router-dom';
 import { Layout, Menu } from 'antd';
 import Threads from './pages/threads/Threads';
 import Experience from './pages/experience/Experience';
@@ -23,13 +23,23 @@ const items = [
 ];
 
 const App = () => {
-  const [current, setCurrent] = useState('threads');
   const navigate = useNavigate();
+  const location = useLocation();
+  const [current, setCurrent] = useState('threads');
+
+  useEffect(() => {
+    const path = location.pathname;
+    if (path.startsWith('/thread-details')) {
+      setCurrent('');
+    } else if (path === '/experience') {
+      setCurrent('experience');
+    } else {
+      setCurrent('threads');
+    }
+  }, [location]);
 
   const onClick = (e) => {
-    console.log('click ', e);
     setCurrent(e.key);
-
     if (e.key === 'threads') {
       navigate('/');
     } else if (e.key === 'experience') {
