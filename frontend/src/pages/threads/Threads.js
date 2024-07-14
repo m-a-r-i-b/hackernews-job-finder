@@ -16,7 +16,6 @@ const Threads = () => {
     try {
       const response = await axios.get(`${BASE_URL}/get-threads/`);
       setThreads(response.data);
-      console.log("threads", response.data);
     } catch (error) {
       console.error('Error fetching threads:', error);
     }
@@ -50,7 +49,6 @@ const Threads = () => {
         title: title,
         url: url
       });
-      console.log('Thread added successfully:', response.data);
 
       message.success('Thread added successfully!');
       setModalVisible(false);

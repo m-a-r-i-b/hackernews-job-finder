@@ -97,7 +97,6 @@ const handleCheckboxChange = async (record, checked) => {
       comment_id: record.key,
       is_read: checked,
     });
-    console.log(`Comment ${record.key} read status updated successfully!`);
   } catch (error) {
     console.error('Error updating read status:', error);
   }

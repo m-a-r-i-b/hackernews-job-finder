@@ -13,10 +13,8 @@ class DatabaseService:
             with open(self.filename, "r") as file:
                 data = json.load(file)
                 if data:
-                    print("Table data exists...")
                     return data
                 else:
-                    print("Table data does not exist, returning empty {}...")
                     return EMPTY_TABLE
         except (FileNotFoundError, json.JSONDecodeError):
             return EMPTY_TABLE

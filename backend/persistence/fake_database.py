@@ -50,7 +50,6 @@ class Database:
             self._table_data['threads'][url]['comments'][comment_id].update(data)
         else:
             print(f'[ERROR] | thread id {url} not found...')
-            print("table data =  ", self._table_data)
 
         self._table_data_updated = True
 

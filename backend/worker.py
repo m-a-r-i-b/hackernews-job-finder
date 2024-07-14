@@ -27,17 +27,14 @@ async def process_comment(thread_url, comment_id, comment_text, db, websocket):
 
     for step in EXECUTION_PLAN:
         try:
-            print("Current step = ",step)
             await notify_frontend_of_processing_status(thread_url, comment_id, step, websocket)
             agent_for_step = STEP_TO_AGENT_MAPPING[step]
             output = json.loads(agent_for_step(db).run(comment_text).json())
-            print("Output = ",output)
 
             await notify_frontend(construct_socket_message(thread_url,comment_id, step, output), websocket)
             db.update_threads_comment(thread_url, comment_id, {step: output})
 
             if step == Step.IS_REMOTE_WORK_ALLOWED and (not output['allows_remote_work']):
-                print(f"Comment id {comment_id} Remote work not allowed")
                 return # No need to process remaining steps if remote work is not allowed
         except Exception as e:
                 print(f"Error processing comment {comment_id}", e)
