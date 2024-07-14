@@ -10,7 +10,7 @@ class CoverLetterAgent(Agent):
     def __init__(
         self,
         db,
-        brain_model: AgentBrainModel = AgentBrainModel.GPT_3_5_Turbo_0125,
+        brain_model: AgentBrainModel = AgentBrainModel.GPT_4_Omni,
     ):  
         self.my_experience = db.get_experience()
         prompt = get_chat_prompt(self.my_experience)
