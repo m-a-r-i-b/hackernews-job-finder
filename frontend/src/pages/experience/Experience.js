@@ -18,17 +18,26 @@ const Experience = () => {
       });
   }, []);
 
-  const handleUpload = (info) => {
-    if (info.file.status === 'done') {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setContent(e.target.result);
-      };
-      reader.readAsText(info.file.originFileObj);
-    } else if (info.file.status === 'error') {
-      message.error(`${info.file.name} file upload failed.`);
+  const handleUpload = async (options) => {
+    const { file } = options;
+    setFile(file);  // Set the file state
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const response = await axios.post(`${BASE_URL}/upload-resume/`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      setContent(response.data.content);
+      message.success(`${file.name} file uploaded successfully.`);
+    } catch (error) {
+      message.error(`${file.name} file upload failed.`);
     }
   };
+
 
   const handleSave = () => {
     axios.post(`${BASE_URL}/submit-experience/`, {

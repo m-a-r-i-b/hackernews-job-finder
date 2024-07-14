@@ -5,9 +5,10 @@ import queue
 import random
 import threading
 import time
-from fastapi import FastAPI, BackgroundTasks, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, BackgroundTasks, File, UploadFile, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
-from utils import construct_socket_message, notify_frontend
+from agents.resume_parser.agent import ResumeParserAgent
+from utils import construct_socket_message, notify_frontend, read_docx, read_pdf
 from models import CommentRead, Criteria, Experience, ThreadDetails
 from persistence.fake_database import Database
 from scraper import scrap_comments
@@ -80,9 +81,24 @@ async def update_comment_read_status(comment_details: CommentRead):
     ), frontend_websocket)
 
 
-@app.post("/submit-experience/")
-async def submit_item(exp: Experience):
-    db.set_experience(exp.experience)
+
+@app.post("/upload-resume/")
+async def upload_file(file: UploadFile = File(...)):
+    content = ""
+    if file.content_type == "application/pdf":
+        content = await read_pdf(file)
+    elif file.content_type == "application/vnd.openxmlformats-officedocument.wordprocessingml.document" or file.content_type == "application/msword":
+        content = await read_docx(file)
+    else:
+        return {"error": "Unsupported file type"}
+    
+    try:
+        resume_details = json.loads(ResumeParserAgent(db).run(content).json())['resume_details']
+    except Exception as e:
+        print("Error parsing resume", e)
+        resume_details = content
+
+    return {"filename": file.filename, "content": resume_details}
 
 
 @app.post("/submit-experience/")
@@ -92,6 +108,7 @@ async def submit_item(exp: Experience):
 @app.get("/get-experience/")
 async def get_experience():
     return db.get_experience()
+
 
 
 @app.post("/submit-criteria/")

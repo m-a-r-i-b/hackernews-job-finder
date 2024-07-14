@@ -5,6 +5,11 @@ from models import SocketMessage
 from const import USER_MSG_KEY, Step
 from langchain_core.prompts import ChatPromptTemplate
 from jinja2 import Environment, FileSystemLoader, StrictUndefined
+from PyPDF2 import PdfReader
+from docx import Document
+import io
+from fastapi import UploadFile
+
 
 
 def render_template(curr_dir, context, template_name) -> str:
@@ -42,3 +47,20 @@ async def notify_frontend(msg_obj: SocketMessage, websocket):
         await websocket['socket'].send_text(json.dumps(msg_obj))
     except Exception as e:
         print("Error sending data to frontend", e)
+
+
+
+async def read_pdf(file: UploadFile):
+    pdf_reader = PdfReader(io.BytesIO(await file.read()))
+    text = ""
+    for page in pdf_reader.pages:
+        text += page.extract_text()
+    return text
+
+
+async def read_docx(file: UploadFile):
+    docx_reader = Document(io.BytesIO(await file.read()))
+    text = ""
+    for para in docx_reader.paragraphs:
+        text += para.text + "\n"
+    return text
