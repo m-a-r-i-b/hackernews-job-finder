@@ -1,6 +1,3 @@
-docker compose up --build
-
-
 This project leverages LLMs to provide information from "Hackernews who is hiring <month> <year>" thread in a structured and visually appealing interface.
 
 
@@ -13,7 +10,7 @@ https://github.com/m-a-r-i-b/shadow/assets/77619505/2825d1d3-e04d-4cac-87a5-78a2
 
 ### High Level Architecture
 
-<img src="https://github.com/m-a-r-i-b/hackernews-job-finder/blob/main/system-overview.png" width="550" height="650" />
+<img src="https://github.com/m-a-r-i-b/hackernews-job-finder/blob/main/system-overview.png" />
 
 
 ### To Run Locally
