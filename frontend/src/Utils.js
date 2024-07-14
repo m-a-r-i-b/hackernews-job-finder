@@ -7,7 +7,7 @@ export function assignColorToKeyword(keyword) {
 
   // Loop through all the keys in TECHNOLOGY_COLORS
   for (const key in TECHNOLOGY_COLORS) {
-    if (keyword.toLowerCase() == key && key.length > longestKey.length) {
+    if (keyword.toLowerCase() === key && key.length > longestKey.length) {
       longestKey = key;
       languageColor = TECHNOLOGY_COLORS[key];
     }

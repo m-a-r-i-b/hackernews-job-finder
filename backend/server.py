@@ -1,11 +1,7 @@
-import asyncio
-from concurrent.futures import ThreadPoolExecutor
 import json
 import queue
-import random
-import threading
 import time
-from fastapi import FastAPI, BackgroundTasks, File, UploadFile, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, File, UploadFile, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from agents.resume_parser.agent import ResumeParserAgent
 from utils import construct_socket_message, notify_frontend, read_docx, read_pdf
@@ -13,7 +9,6 @@ from models import CommentRead, Criteria, Experience, ThreadDetails
 from persistence.fake_database import Database
 from scraper import scrap_comments
 from worker import start_workers
-from typing import List
 from dotenv import load_dotenv
 load_dotenv(".env")
 
@@ -54,7 +49,6 @@ async def submit_item(thread: ThreadDetails):
     
     for comment_id in comments_dict.keys():
         task_queue.put((thread.url, comment_id, comments_dict[comment_id]['text'], db))
-        break
   
     return {"title": thread.title, "url": thread.url}
 
@@ -117,27 +111,3 @@ async def get_criteria():
     return db.get_criteria()
 
 
-# uvicorn server:app --reload
-
-
-
-
-
-
-
-@app.get("/test-post-socket/")
-async def test_socket():
-    socket_payload = {
-        'thread_url': "1",
-        'key': "2",
-        'payload': {
-            'filter': 'F',
-            "categorize": "C"
-        }
-    }
-
-    try:
-        print("trying to send data to FE")
-        await frontend_websocket.send_text(json.dumps(socket_payload))
-    except Exception as e:
-        print("Error sending data to frontend", e)

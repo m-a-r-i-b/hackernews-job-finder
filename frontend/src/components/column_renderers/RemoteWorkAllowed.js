@@ -11,8 +11,8 @@ export function remoteWorkColumnRenderer(value) {
       return <BlinkingDot />;
     }
     return (
-      <Tag color={value == 'true' ? 'green' : 'red'}>
-        {value == 'true' ? 'YES' : 'NO'}
+      <Tag color={value === 'true' ? 'green' : 'red'}>
+        {value === 'true' ? 'YES' : 'NO'}
       </Tag>
     );
 }
