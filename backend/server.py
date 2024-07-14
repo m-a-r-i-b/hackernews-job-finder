@@ -54,6 +54,7 @@ async def submit_item(thread: ThreadDetails):
     
     for comment_id in comments_dict.keys():
         task_queue.put((thread.url, comment_id, comments_dict[comment_id]['text'], db))
+        break
   
     return {"title": thread.title, "url": thread.url}
 

@@ -21,5 +21,5 @@ class CoverLetterAgent(Agent):
         self, user_msg: str
     ) -> CoverLetterOutput:
         if not self.my_experience or self.my_experience == "":
-            return '-'
+            return CoverLetterOutput(cover_letter='-')
         return super().run(user_msg)
