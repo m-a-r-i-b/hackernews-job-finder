@@ -124,6 +124,7 @@ const ThreadDetails = () => {
         onCancel={handleCancel}
         onOk={handleCancel}
         footer={[
+          <span key={selectedRow && (selectedRow.key+"s")}>Is Read &nbsp;</span>  ,
           <Switch key={selectedRow && selectedRow.key} checked={selectedRow && selectedRow.is_read} onChange={toggleReadStatus} />
         ]}
       >

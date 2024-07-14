@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Button, Modal, Form, Input } from 'antd';
+import { Card, Button, Modal, Form, Input, message } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { BASE_URL } from '../../Constants';
@@ -39,6 +39,11 @@ const Threads = () => {
   };
 
   const handleAddThread = async () => {
+    if (!/^https:\/\/news\.ycombinator\.com\/item\?id=\d+$/.test(url)) {
+      message.error('URL must be in the format: https://news.ycombinator.com/item?id=40224213');
+      return;
+    }
+
     setLoading(true);
     try {
       const response = await axios.post(`${BASE_URL}/submit-thread/`, {
@@ -47,11 +52,13 @@ const Threads = () => {
       });
       console.log('Thread added successfully:', response.data);
 
+      message.success('Thread added successfully!');
       setModalVisible(false);
       fetchThreads();
       navigateToDetailsPage(url);
     } catch (error) {
       console.error('Error adding thread:', error);
+      message.error('Error adding thread. Please try again.');
     } finally {
       setLoading(false);
     }
