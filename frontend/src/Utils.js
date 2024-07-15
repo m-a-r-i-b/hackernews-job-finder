@@ -42,13 +42,21 @@ export function parseComment(msgObj){
 
       if (msgObj.EXTRACT_KEYWORDS){
         if (typeof msgObj.EXTRACT_KEYWORDS === 'object'){
-          msgObj.EXTRACT_KEYWORDS = msgObj.EXTRACT_KEYWORDS.keywords.join(', ')
+          if (msgObj.EXTRACT_KEYWORDS.keywords.length === 0){
+            msgObj.EXTRACT_KEYWORDS = '-'
+          } else{
+            msgObj.EXTRACT_KEYWORDS = msgObj.EXTRACT_KEYWORDS.keywords.join(', ')
+          }
         }
       }
 
       if (msgObj.EXTRACT_ROLES){
         if (typeof msgObj.EXTRACT_ROLES === 'object'){
-          msgObj.EXTRACT_ROLES = msgObj.EXTRACT_ROLES.roles.join(', ')
+          if (msgObj.EXTRACT_ROLES.roles.length === 0){
+            msgObj.EXTRACT_ROLES = '-'
+          } else{
+            msgObj.EXTRACT_ROLES = msgObj.EXTRACT_ROLES.roles.join(', ')
+          }
         }
       }
 
