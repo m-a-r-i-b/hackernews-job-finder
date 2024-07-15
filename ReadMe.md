@@ -22,7 +22,8 @@ https://github.com/user-attachments/assets/db0bfaa1-de86-43d6-8bcc-43e188c53940
 
 
 ### High Level Architecture
-<img src="https://github.com/m-a-r-i-b/hackernews-job-finder/blob/main/system-overview.png" />
+![image](https://github.com/user-attachments/assets/829ffcfa-a703-4905-b0e8-8f01224bd404)
+
 
 
 ### How It Works
