@@ -3,7 +3,6 @@ This project leverages LLMs to provide information from "Hackernews who is hirin
 
 ### Demo
 
-TODO : Add demo video here
 https://github.com/m-a-r-i-b/shadow/assets/77619505/2825d1d3-e04d-4cac-87a5-78a2b7030eec
 
 
