@@ -32,7 +32,9 @@ const ThreadDetails = () => {
           'url': decodedUrl,
         });
         let commentsList = Object.entries(commentsDict).map(([key, value]) => ({ key, ...value }));
+        console.log("comments List = ",commentsList)
         commentsList.forEach((comment) =>  parseComment(comment));
+        console.log("Parsed comments List = ",commentsList)
         setDataSource(commentsList);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -45,7 +47,9 @@ const ThreadDetails = () => {
   useEffect(() => {
     if (socket) {
       socket.onmessage = (event) => {
+        console.log("socket event data = ", event.data)
         const updatedComment = parseComment(JSON.parse(event.data));
+        console.log("Updated comment = ", updatedComment)
         setDataSource((dataSource) =>
           dataSource.map((comment) => 
             comment.key === updatedComment.comment_id ? { ...comment,...updatedComment, ...updatedComment.payload }  : comment
