@@ -49,6 +49,9 @@ const ThreadDetails = () => {
       socket.onmessage = (event) => {
         console.log("socket event data = ", event.data)
         const updatedComment = parseComment(JSON.parse(event.data));
+        if(updatedComment.thread_url !== threadDetails.url) {
+          return;
+        }
         console.log("Updated comment = ", updatedComment)
         setDataSource((dataSource) =>
           dataSource.map((comment) => 

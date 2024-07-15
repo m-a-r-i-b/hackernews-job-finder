@@ -43,7 +43,7 @@ async def notify_frontend_of_processing_status(thread_url, comment_id, step, web
 
 async def notify_frontend(msg_obj: SocketMessage, websocket):
     try:
-        await asyncio.sleep(random.uniform(0, 0.2))
+        await asyncio.sleep(random.uniform(0, 1))
         await websocket['socket'].send_text(json.dumps(msg_obj))
     except Exception as e:
         print("Error sending data to frontend", e)

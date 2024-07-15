@@ -62,6 +62,7 @@ export const columns = [
   {
     title: 'Is Read',
     key: 'action',
+    width: 120,
     filters: [
       { text: 'Read', value: true },
       { text: 'Unread', value: false },
