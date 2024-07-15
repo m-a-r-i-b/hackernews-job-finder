@@ -5,8 +5,13 @@
 
 </p>
 
+
+<p align="center" width=50%>
+  
 ## About
-An app that provides a simple user interface to scrap "hackernews who is hiring threads" & leverage LLMs to filter, extract and generate information about each job post.   
+A tool to scrap "hackernews who is hiring threads" & leverage LLMs to filter, extract and generate information about each job post.   
+
+</p>
 
 
 
