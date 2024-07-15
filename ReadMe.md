@@ -1,8 +1,8 @@
 <p align="center" width=25%>
   
-![banner](https://github.com/user-attachments/assets/2b65ed44-580d-4474-aa87-7beddfdad173)
+  ![banner-1-removebg-preview](https://github.com/user-attachments/assets/6e5db0ab-15d7-4660-9138-886a55b3c473)
 
-  
+
 </p>
 
 ## About
