@@ -16,6 +16,4 @@ services:
     container_name: frontend-container
     ports:
       - "3000:3000"
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
+
