@@ -48,6 +48,14 @@ const ThreadDetails = () => {
     if (socket) {
       socket.onmessage = (event) => {
         console.log("socket event data = ", event.data)
+
+        const countOccurrences = (mainString, subString) => (mainString.match(new RegExp(subString, 'g')) || []).length;
+        const noOfSocketMessages = countOccurrences(event.data, "thread_url");
+        if (noOfSocketMessages >= 2) {
+          // Some weird case when socket receives to concatenated messages as opposed to one
+          return; 
+        }
+
         const updatedComment = parseComment(JSON.parse(event.data));
         if(updatedComment.thread_url !== threadDetails.url) {
           return;
@@ -61,7 +69,7 @@ const ThreadDetails = () => {
 
       };
     }
-  }, [socket]);
+  }, [socket, threadDetails]);
 
   const handleRowClick = (record) => {
     setSelectedRow(record);
