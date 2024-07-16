@@ -10,9 +10,31 @@
 </h3>
 
 
-<p align="center" width=50%>
-  
 
+## Agents
+- ResumeParser
+    -  Description: Extracts work experience and skills from the given resume.
+    -  Model: GPT-4 Omni
+    
+-  IsRemote
+    -  Description: Checks if the job post allows remote work or not.
+    -  Model: GPT-3.5
+   
+-  RoleExtractor
+    -  Description: Finds out what job roles are being offered in the job post.
+    -  Model: GPT-3.5
+
+-  KeywordExtractor
+    -  Description: Extracts technological keywords from the job post, such as Python, JavaScript, React, TensorFlow, etc.
+    -  Model: GPT-3.5
+   
+-  ContactInfoExtractor
+    -  Description: Extracts email or application links for the job post.
+    -  Model: GPT-3.5
+   
+-  CoverLetterGenerator
+    -  Description: Uses the extracted details from your resume and job description to write a small cover letter email based on the overlap between the resume and job description.
+    -  Model: GPT-4 Omni
 
 
 
