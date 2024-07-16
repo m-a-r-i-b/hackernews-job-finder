@@ -1,5 +1,7 @@
-<p align="center" width=25%>
-<img src="https://oscimg.cellmean.com/oscnet/up-3b137e2e6620f7a63f11a96485b1fb3b.png">
+<p align="center" width=10%>
+
+<img src="https://github.com/user-attachments/assets/df3a2dbb-69aa-4185-88aa-19ec02957e0d" width="40%">
+  
 </p>
 
 
